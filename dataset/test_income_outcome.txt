@@ -1,0 +1,9 @@
+income  rent
+income  salary
+outcome pay
+outcome buy
+income	sal
+outcome	payments
+income	income
+buy nuts
+

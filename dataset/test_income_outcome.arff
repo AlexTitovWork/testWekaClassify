@@ -1,0 +1,13 @@
+@relation 'SMS spam'
+
+@attribute label {income,outcome}
+@attribute text string
+
+@data
+income,rent
+income,salary
+outcome,pay
+outcome,buy
+income,sal
+outcome,payments
+income,income
