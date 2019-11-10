@@ -324,6 +324,7 @@ public class WekaClassifier {
         LOGGER.info("buy nuts" + " " + wt.predict("buy nuts"));
         LOGGER.info("pay pall" + " " + wt.predict("pay pall"));
         LOGGER.info("salary" + " " + wt.predict("salary"));
+        LOGGER.info("profit" + " " + wt.predict("salary"));
 
 
         LOGGER.info("Evaluation Result: \n"+wt.evaluate());
