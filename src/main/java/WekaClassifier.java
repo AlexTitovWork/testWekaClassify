@@ -302,7 +302,7 @@ public class WekaClassifier {
         URL url = wt.getClass().getClassLoader().getResource("./");
 
 //        final String MODEL = url.getPath() + "model.dat";
-        final String MODEL = "model/icome_outcome_model.dat";
+        final String MODEL = "model/income_outcome_model.dat";
 
         if (new File(MODEL).exists()) {
             wt.loadModel(MODEL);
@@ -325,6 +325,7 @@ public class WekaClassifier {
         LOGGER.info("pay pall" + " " + wt.predict("pay pall"));
         LOGGER.info("salary" + " " + wt.predict("salary"));
         LOGGER.info("profit" + " " + wt.predict("salary"));
+        LOGGER.info("spend" + " " + wt.predict("spend"));
 
 
         LOGGER.info("Evaluation Result: \n"+wt.evaluate());
