@@ -10,7 +10,7 @@ import weka.core.tokenizers.NGramTokenizer;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 import java.io.*;
-import java.net.URL;
+// import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -62,13 +62,13 @@ public class WekaClassifier {
         Attribute attributeText = new Attribute("text", (List < String > ) null);
 
         // Declare the label attribute along with its values
-        ArrayList classAttributeValues = new ArrayList ();
+        ArrayList<String> classAttributeValues = new ArrayList <>();
         classAttributeValues.add("income");
         classAttributeValues.add("outcome");
         Attribute classAttribute = new Attribute("label", classAttributeValues);
 
         // Declare the feature vector
-        wekaAttributes = new ArrayList ();
+        wekaAttributes = new ArrayList <>();
         wekaAttributes.add(classAttribute);
         wekaAttributes.add(attributeText);
 
@@ -299,9 +299,12 @@ public class WekaClassifier {
 
 
         WekaClassifier wt = new WekaClassifier();
-        URL url = wt.getClass().getClassLoader().getResource("./");
+        // URL url = wt.getClass().getClassLoader().getResource("./");
 
 //        final String MODEL = url.getPath() + "model.dat";
+
+        //TODO Change income-outcome model to default outcome-model
+        
         final String MODEL = "model/income_outcome_model.dat";
 
         if (new File(MODEL).exists()) {
@@ -329,7 +332,7 @@ public class WekaClassifier {
 
 
         LOGGER.info("Evaluation Result: \n"+wt.evaluate());
-
+        //TODO Add complex test in model
 
 
     }
