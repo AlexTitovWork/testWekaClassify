@@ -318,7 +318,7 @@ public class WekaClassifier {
         //run few predictions
         LOGGER.info("text 'bought' is " + wt.predict("bought a chicken ?"));
         LOGGER.info("text 'spend all my money' is " + wt.predict("spend all my money"));
-
+        //TO DO some test...
 
         //run evaluation
         LOGGER.info("Payment" + " " + wt.predict("Payment"));
