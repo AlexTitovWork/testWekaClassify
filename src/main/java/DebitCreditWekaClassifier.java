@@ -132,7 +132,7 @@ public class DebitCreditWekaClassifier {
 
     /**
      * classify a new message into income or outcome.
-     * @param message to be classified.
+     * @param text to be classified.
      * @return a class label (income or outcome )
      */
     public String predict(String text) {
@@ -187,14 +187,17 @@ public class DebitCreditWekaClassifier {
 
     /**
      * Model loader
-     * @param fileName The name of the file that stores the text.
+     * @param filename The name of the file that stores the text.
      */
-    public void loadModel(String fileName) {
+    public void loadModel(String filename) {
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
-            Object tmp = in .readObject();
-            classifier = (FilteredClassifier) tmp; in .close();
-            LOGGER.info("Model successfully loaded: " + fileName);
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename));
+            Object tmp = in.readObject();
+            classifier = (FilteredClassifier) tmp;
+            in.close();
+            LOGGER.info("Model successfully loaded: " + filename);
+        } catch (FileNotFoundException e) {
+            LOGGER.warning(e.getMessage());
         } catch (IOException e) {
             LOGGER.warning(e.getMessage());
         } catch (ClassNotFoundException e) {
@@ -205,15 +208,15 @@ public class DebitCreditWekaClassifier {
     /**
      * This method saves the trained model into a file. This is done by
      * simple serialization of the classifier object.
-     * @param fileName The name of the file that will store the trained model.
+     * @param filename The name of the file that will store the trained model.
      */
 
-    public void saveModel(String fileName) {
+    public void saveModel(String filename) {
         try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
             out.writeObject(classifier);
             out.close();
-            LOGGER.info("Saved model: " + fileName);
+            LOGGER.info("Saved model: " + filename);
         } catch (IOException e) {
             LOGGER.warning(e.getMessage());
         }
@@ -224,7 +227,7 @@ public class DebitCreditWekaClassifier {
      * Attribute-Relation File Format (ARFF)
      * https://www.cs.waikato.ac.nz/ml/weka/arff.html
      * @param filename
-     * @return
+     * @return Instances of ARFF file
      */
     public Instances loadDataset(String filename) {
         /* 
@@ -239,7 +242,7 @@ public class DebitCreditWekaClassifier {
         dataset.setClassIndex(0);
 
         /**
-         * Read data file, parse text and add to instance
+          * Read data file, parse text and add to instance
          */
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             for (String line;
@@ -274,11 +277,11 @@ public class DebitCreditWekaClassifier {
     /**
      * Loads a dataset in ARFF format. If the file does not exist, or
      * it has a wrong format, the attribute trainData is null.
-     * @param fileName The name of the file that stores the dataset.
+     * @param filename The name of the file that stores the dataset.
      */
-    public Instances loadArff(String fileName) {
+    public Instances loadArff(String filename) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
             ArffReader arff = new ArffReader(reader);
             Instances dataset = arff.getData();
             // replace with logger System.out.println("loaded dataset: " + fileName);
@@ -294,7 +297,7 @@ public class DebitCreditWekaClassifier {
      * This method saves a dataset in ARFF format.
      * Attribute-Relation File Format (ARFF)
      * @param dataset dataset in arff format
-     * @param fileName The name of the file that stores the dataset.
+     * @param filename The name of the file that stores the dataset.
      */
     public void saveArff(Instances dataset, String filename) {
         try {

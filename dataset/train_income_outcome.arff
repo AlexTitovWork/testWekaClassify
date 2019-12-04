@@ -1,41 +1,41 @@
-@relation 'SMS spam'
+@relation 'Debit Credit'
 
-@attribute label {income,outcome}
+@attribute label {debit,credit}
 @attribute text string
 
 @data
-income,profit
-income,Salary
-income,sal
-income,income
-income,income
-income,rent
-income,salary
-income,'a fixed regular profit, typically paid on a monthly or biweekly basis but often expressed as an annual sum, made by an employer to an employee, especially a professional or white-collar worker.'
-income,'salary increase'
-income,'remuneration, reward, fee, compensation, gratification a salary to.'
-income,'It employed people on a monthly salary and at its peak there were more than 5,000 on the payroll.'
-income,'He sold his car but on his monthly salary of £80'
-income,'a financial gain, especially the difference between the amount earned and the amount spent in buying, operating, or producing something.'
-income,'obtain a financial advantage or benefit, especially from an investment.'
-outcome,'buy,contribution, fee, payment, deposit, ante, levy'
-outcome,'got pay, payment, discharge'
-outcome,'get, pay, fee, payment, toll'
-outcome,'payment, expenditure'
-outcome,'pay out (money) in buying or hiring goods or services.'
-outcome,'the action of spending funds.'
-outcome,'payment, spend'
-outcome,'the action or process of paying someone or something, or of being paid.'
-outcome,'Surely there is a case for a reduced payment for those who receive an inferior service.'
-outcome,'Many stores will accept payment by cheque or postal order.'
-outcome,pay
-outcome,buy
-income,'sal, remuneration, reward, fee, compensation, gratification'
-outcome,payments
-outcome,'buy, bought'
-outcome,bought
-income,premium
-outcome,'payment, remuneration, disbursement, repayment, reimbursement, defrayal'
-income,'bonus, premium, prize, award, bonus, bounty, purse'
-income,'an amount of money added to wages on a seasonal basis, especially as a reward for good performance.'
-outcome,'bought a bun'
+debit,profit
+debit,Salary
+debit,sal
+debit,income
+debit,income
+debit,rent
+debit,salary
+debit,'a fixed regular profit, typically paid on a monthly or biweekly basis but often expressed as an annual sum, made by an employer to an employee, especially a professional or white-collar worker.'
+debit,'salary increase'
+debit,'remuneration, reward, fee, compensation, gratification a salary to.'
+debit,'It employed people on a monthly salary and at its peak there were more than 5,000 on the payroll.'
+debit,'He sold his car but on his monthly salary of £80'
+debit,'a financial gain, especially the difference between the amount earned and the amount spent in buying, operating, or producing something.'
+debit,'obtain a financial advantage or benefit, especially from an investment.'
+credit,'buy,contribution, fee, payment, deposit, ante, levy'
+credit,'got pay, payment, discharge'
+credit,'get, pay, fee, payment, toll'
+credit,'payment, expenditure'
+credit,'pay out (money) in buying or hiring goods or services.'
+credit,'the action of spending funds.'
+credit,'payment, spend'
+credit,'the action or process of paying someone or something, or of being paid.'
+credit,'Surely there is a case for a reduced payment for those who receive an inferior service.'
+credit,'Many stores will accept payment by cheque or postal order.'
+credit,pay
+credit,buy
+debit,'sal, remuneration, reward, fee, compensation, gratification'
+credit,payments
+credit,'buy, bought'
+credit,bought
+debit,premium
+credit,'payment, remuneration, disbursement, repayment, reimbursement, defrayal'
+debit,bonus
+debit,'an amount of money added to wages on a seasonal basis, especially as a reward for good performance.'
+credit,'bought a bun'

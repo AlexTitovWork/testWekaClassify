@@ -1,13 +1,14 @@
-@relation 'SMS spam'
+@relation 'Debit Credit'
 
-@attribute label {income,outcome}
+@attribute label {debit,credit}
 @attribute text string
 
 @data
-income,rent
-income,salary
-outcome,pay
-outcome,buy
-income,sal
-outcome,payments
-income,income
+debit,rent
+debit,salary
+credit,pay
+credit,buy
+debit,sal
+credit,payments
+debit,income
+credit,'buy nuts'
