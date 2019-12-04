@@ -17,13 +17,16 @@ import java.util.logging.Logger;
 
 
 /**
- * This class implements a Multinomial NaiveBayes text classifier using WEKA.
- * @author Alfred Francis - https://alfredfrancis.github.io
- * @see http://weka.wikispaces.com/Programmatic+Use
+ * DEBIT CREDIT classifier based  Weka libs, for detect transaction direction.
+ * @author Alex Titov https://github.com/AlexTitovWork/testWekaClassify
+ * Thanks a lot for original SPAM filter code Alfred Francis!
+ * @see https://github.com/alfredfrancis/spam-classification-weka-java/blob/master/WekaClassifier.java
+ * @see http://https://waikato.github.io/weka-wiki/use_weka_in_your_java_code/
+ * @see https://www.cs.waikato.ac.nz/ml/index.html
  */
-public class WekaClassifier {
+public class DebitCreditWekaClassifier {
 
-    private static Logger LOGGER = Logger.getLogger("WekaClassifier");
+    private static Logger LOGGER = Logger.getLogger("DebitCreditInternalSystem");
 
     private FilteredClassifier classifier;
 
@@ -34,11 +37,6 @@ public class WekaClassifier {
     //declare attributes of Instance
     private ArrayList < Attribute > wekaAttributes;
 
-    //declare and initialize file locations
-//    private static final String TRAIN_DATA = "dataset/train.txt";
-//    private static final String TRAIN_ARFF_ARFF = "dataset/train.arff";
-//    private static final String TEST_DATA = "dataset/test.txt";
-//    private static final String TEST_DATA_ARFF = "dataset/test.arff";
 
     private static final String TRAIN_DATA = "dataset/train_income_outcome.txt";
     private static final String TRAIN_ARFF_ARFF = "dataset/train_income_outcome.arff";
@@ -47,15 +45,26 @@ public class WekaClassifier {
 
 
 
-    WekaClassifier() {
+    DebitCreditWekaClassifier() {
 
         /*
-         * Class for running an arbitrary classifier on data that has been passed through an arbitrary filter
-         * Training data and test instances will be processed by the filter without changing their structure
+         * Class for running an arbitrary classifier on data that has been passed through an arbitrary filter.
+         * Like the classifier, the structure of the filter is based exclusively on the training data and test
+         * instances will be processed by the filter without changing their structure.
+         * If unequal instance weights or attribute weights are present,
+         * and the filter or the classifier are unable to deal with them,
+         * the instances and/or attributes are resampled with replacement
+         * based on the weights before they are passed to the filter or the classifier (as appropriate).
          */
         classifier = new FilteredClassifier();
 
-        // set Multinomial NaiveBayes as arbitrary classifier
+        /**
+         * Class for building and using a multinomial Naive Bayes classifier. For more information see,
+         *
+         * Andrew Mccallum, Kamal Nigam: A Comparison of Event Models for Naive Bayes Text Classification.
+         * In: AAAI-98 Workshop on 'Learning for Text Categorization', 1998.
+         * https://weka.sourceforge.io/doc.dev/weka/classifiers/bayes/NaiveBayesMultinomial.html
+         */
         classifier.setClassifier(new NaiveBayesMultinomial());
 
         // Declare text attribute to hold the message
@@ -63,11 +72,13 @@ public class WekaClassifier {
 
         // Declare the label attribute along with its values
         ArrayList<String> classAttributeValues = new ArrayList <>();
-        classAttributeValues.add("income");
-        classAttributeValues.add("outcome");
+        classAttributeValues.add("debit");
+        classAttributeValues.add("credit");
         Attribute classAttribute = new Attribute("label", classAttributeValues);
 
-        // Declare the feature vector
+        /**
+         * Built the feature vector "wekaAttributes"
+         */
         wekaAttributes = new ArrayList <>();
         wekaAttributes.add(classAttribute);
         wekaAttributes.add(attributeText);
@@ -79,7 +90,7 @@ public class WekaClassifier {
      */
     public void transform() {
         try {
-            trainData = loadRawDataset(TRAIN_DATA);
+            trainData = loadDataset(TRAIN_DATA);
             saveArff(trainData, TRAIN_ARFF_ARFF);
 
             // create the filter and set the attribute to be transformed from text into a feature vector (the last one)
@@ -161,7 +172,7 @@ public class WekaClassifier {
                 testData = loadArff(TEST_DATA_ARFF);
                 testData.setClassIndex(0);
             } else {
-                testData = loadRawDataset(TEST_DATA);
+                testData = loadDataset(TEST_DATA);
                 saveArff(testData, TEST_DATA_ARFF);
             }
 
@@ -175,7 +186,7 @@ public class WekaClassifier {
     }
 
     /**
-     * This method loads the model to be used as classifier.
+     * Model loader
      * @param fileName The name of the file that stores the text.
      */
     public void loadModel(String fileName) {
@@ -183,7 +194,7 @@ public class WekaClassifier {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
             Object tmp = in .readObject();
             classifier = (FilteredClassifier) tmp; in .close();
-            LOGGER.info("Loaded model: " + fileName);
+            LOGGER.info("Model successfully loaded: " + fileName);
         } catch (IOException e) {
             LOGGER.warning(e.getMessage());
         } catch (ClassNotFoundException e) {
@@ -209,22 +220,27 @@ public class WekaClassifier {
     }
 
     /**
-     * Loads a dataset in space seperated text file and convert it to Arff format.
-     * @param fileName The name of the file.
+     * Loads a data set into a text file, separated by spaces, and converts it to Arff format
+     * Attribute-Relation File Format (ARFF)
+     * https://www.cs.waikato.ac.nz/ml/weka/arff.html
+     * @param filename
+     * @return
      */
-    public Instances loadRawDataset(String filename) {
+    public Instances loadDataset(String filename) {
         /* 
          *  Create an empty training set
          *  name the relation “Rel”.
-         *  set intial capacity of 10*
+         *  set intial capacity of 8*
          */
 
-        Instances dataset = new Instances("SMS spam", wekaAttributes, 10);
+        Instances dataset = new Instances("Debit Credit", wekaAttributes, 8);
 
         // Set class index
         dataset.setClassIndex(0);
 
-        // read text file, parse data and add to instance
+        /**
+         * Read data file, parse text and add to instance
+         */
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             for (String line;
                 (line = br.readLine()) != null;) {
@@ -249,7 +265,7 @@ public class WekaClassifier {
             LOGGER.warning(e.getMessage());
         } 
         catch (ArrayIndexOutOfBoundsException e) {
-            LOGGER.info("invalid row.");
+            LOGGER.info("Bad row detected!.");
         }
         return dataset;
 
@@ -276,6 +292,7 @@ public class WekaClassifier {
 
     /**
      * This method saves a dataset in ARFF format.
+     * Attribute-Relation File Format (ARFF)
      * @param dataset dataset in arff format
      * @param fileName The name of the file that stores the dataset.
      */
@@ -291,49 +308,4 @@ public class WekaClassifier {
         }
     }
 
-    /**
-     * Main method. With an example usage of this class.
-     */
-    public static void main(String[] args) throws Exception {
-
-
-
-        WekaClassifier wt = new WekaClassifier();
-        // URL url = wt.getClass().getClassLoader().getResource("./");
-
-//        final String MODEL = url.getPath() + "model.dat";
-
-        //TODO Change income-outcome model to default outcome-model
-        
-        final String MODEL = "model/income_outcome_model.dat";
-
-        if (new File(MODEL).exists()) {
-            wt.loadModel(MODEL);
-        } else {
-            wt.transform();
-            wt.fit();
-            wt.saveModel(MODEL);
-        }
-
-        //run few predictions
-        LOGGER.info("text 'bought' is " + wt.predict("bought a chicken ?"));
-        LOGGER.info("text 'spend all my money' is " + wt.predict("spend all my money"));
-        //TO DO some test...
-
-        //run evaluation
-        LOGGER.info("Payment" + " " + wt.predict("Payment"));
-        LOGGER.info("Payment" + " " + wt.predict("Payment"));
-        LOGGER.info("bought a bun" + " " + wt.predict("bought a bun"));
-        LOGGER.info("buy nuts" + " " + wt.predict("buy nuts"));
-        LOGGER.info("pay pall" + " " + wt.predict("pay pall"));
-        LOGGER.info("salary" + " " + wt.predict("salary"));
-        LOGGER.info("profit" + " " + wt.predict("salary"));
-        LOGGER.info("spend" + " " + wt.predict("spend"));
-
-
-        LOGGER.info("Evaluation Result: \n"+wt.evaluate());
-        //TODO Add complex test in model
-
-
-    }
 }
