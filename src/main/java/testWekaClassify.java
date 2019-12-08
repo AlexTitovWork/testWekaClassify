@@ -19,7 +19,7 @@ public class testWekaClassify {
 
         //TODO Change debit-credit model to default credit direction
 
-        final String MODEL = "model/income_outcome_model.dat";
+        final String MODEL = "model/debit_credit_model.dat";
 
         if (new File(MODEL).exists()) {
             wt.loadModel(MODEL);
@@ -28,6 +28,10 @@ public class testWekaClassify {
             wt.fit();
             wt.saveModel(MODEL);
         }
+
+        LOGGER.info("Evaluation Result: \n"+wt.evaluate());
+        //TODO Add complex test in model
+
 
         LOGGER.warning("\nTest debit credit weka classifyer\n");
         //run test predictions
@@ -45,9 +49,6 @@ public class testWekaClassify {
         LOGGER.info("profit" + " " + wt.predict("salary"));
         LOGGER.info("spend" + " " + wt.predict("spend"));
 
-
-        LOGGER.info("Evaluation Result: \n"+wt.evaluate());
-        //TODO Add complex test in model
 
 
     }

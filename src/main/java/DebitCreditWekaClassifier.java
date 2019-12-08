@@ -10,14 +10,16 @@ import weka.core.tokenizers.NGramTokenizer;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 import java.io.*;
-// import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+// import java.net.URL;
+
 
 /**
  * DEBIT CREDIT classifier based  Weka libs, for detect transaction direction.
+ *
  * @author Alex Titov https://github.com/AlexTitovWork/testWekaClassify
  * Thanks a lot for original SPAM filter code Alfred Francis!
  * @see https://github.com/alfredfrancis/spam-classification-weka-java/blob/master/WekaClassifier.java
@@ -35,14 +37,13 @@ public class DebitCreditWekaClassifier {
 
 
     //declare attributes of Instance
-    private ArrayList < Attribute > wekaAttributes;
+    private ArrayList<Attribute> wekaAttributes;
 
 
     private static final String TRAIN_DATA = "dataset/train_income_outcome.txt";
     private static final String TRAIN_ARFF_ARFF = "dataset/train_income_outcome.arff";
     private static final String TEST_DATA = "dataset/test_income_outcome.txt";
     private static final String TEST_DATA_ARFF = "dataset/test_income_outcome.arff";
-
 
 
     DebitCreditWekaClassifier() {
@@ -68,10 +69,12 @@ public class DebitCreditWekaClassifier {
         classifier.setClassifier(new NaiveBayesMultinomial());
 
         // Declare text attribute to hold the message
-        Attribute attributeText = new Attribute("text", (List < String > ) null);
+        Attribute attributeText = new Attribute("text", (List<String>) null);
 
-        // Declare the label attribute along with its values
-        ArrayList<String> classAttributeValues = new ArrayList <>();
+        /**
+         * Declare the label attribute along with its values
+          */
+        ArrayList<String> classAttributeValues = new ArrayList<>();
         classAttributeValues.add("debit");
         classAttributeValues.add("credit");
         Attribute classAttribute = new Attribute("label", classAttributeValues);
@@ -79,46 +82,56 @@ public class DebitCreditWekaClassifier {
         /**
          * Built the feature vector "wekaAttributes"
          */
-        wekaAttributes = new ArrayList <>();
+        wekaAttributes = new ArrayList<>();
         wekaAttributes.add(classAttribute);
         wekaAttributes.add(attributeText);
 
     }
 
     /**
-     * load training data and set feature generators
+     * Load training data and set feature generators
      */
     public void transform() {
         try {
             trainData = loadDataset(TRAIN_DATA);
             saveArff(trainData, TRAIN_ARFF_ARFF);
-
-            // create the filter and set the attribute to be transformed from text into a feature vector (the last one)
+            /**
+             * Сreate the filter
+             * and set the attribute to be transformed from text into a feature vector (the last one)
+             */
             StringToWordVector filter = new StringToWordVector();
+            /**
+             * https://waikato.github.io/weka-wiki/adding_attributes_to_dataset/
+             */
             filter.setAttributeIndices("last");
-
-            //add ngram tokenizer to filter with min and max length set to 1
+            /**
+             * Add ngram tokenizer to filter with min and max length set to 1
+             */
             NGramTokenizer tokenizer = new NGramTokenizer();
             tokenizer.setNGramMinSize(1);
             tokenizer.setNGramMaxSize(1);
-            //use word delimeter
+            /**
+             * Tokenize based on delimiter
+             * not alphanumeric regexp "\W"
+             */
             tokenizer.setDelimiters("\\W");
             filter.setTokenizer(tokenizer);
-
-            //convert tokens to lowercase
+            /**
+             * To lowercase converting,
+             * as standard filter's procedure.
+             */
             filter.setLowerCaseTokens(true);
-
-            //add filter to classifier
+            /**
+             *  Set filter to classifier
+             */
             classifier.setFilter(filter);
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
         }
-
-
     }
 
     /**
-     * build the classifier with the Training data
+     * Build prepared classifier on the training data
      */
     public void fit() {
         try {
@@ -129,9 +142,9 @@ public class DebitCreditWekaClassifier {
     }
 
 
-
     /**
      * classify a new message into income or outcome.
+     *
      * @param text to be classified.
      * @return a class label (income or outcome )
      */
@@ -162,6 +175,7 @@ public class DebitCreditWekaClassifier {
 
     /**
      * evaluate the classifier with the Test data
+     *
      * @return evaluation summary as string
      */
     public String evaluate() {
@@ -187,6 +201,7 @@ public class DebitCreditWekaClassifier {
 
     /**
      * Model loader
+     *
      * @param filename The name of the file that stores the text.
      */
     public void loadModel(String filename) {
@@ -208,6 +223,7 @@ public class DebitCreditWekaClassifier {
     /**
      * This method saves the trained model into a file. This is done by
      * simple serialization of the classifier object.
+     *
      * @param filename The name of the file that will store the trained model.
      */
 
@@ -226,11 +242,12 @@ public class DebitCreditWekaClassifier {
      * Loads a data set into a text file, separated by spaces, and converts it to Arff format
      * Attribute-Relation File Format (ARFF)
      * https://www.cs.waikato.ac.nz/ml/weka/arff.html
+     *
      * @param filename
      * @return Instances of ARFF file
      */
     public Instances loadDataset(String filename) {
-        /* 
+        /*
          *  Create an empty training set
          *  name the relation “Rel”.
          *  set intial capacity of 8*
@@ -242,11 +259,11 @@ public class DebitCreditWekaClassifier {
         dataset.setClassIndex(0);
 
         /**
-          * Read data file, parse text and add to instance
+         * Read data file, parse text and add to instance
          */
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             for (String line;
-                (line = br.readLine()) != null;) {
+                 (line = br.readLine()) != null; ) {
                 // split at first occurance of n no. of words
                 String[] parts = line.split("\\s+", 2);
 
@@ -263,11 +280,9 @@ public class DebitCreditWekaClassifier {
 
             }
 
-        } 
-        catch (IOException e) {
+        } catch (IOException e) {
             LOGGER.warning(e.getMessage());
-        } 
-        catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             LOGGER.info("Bad row detected!.");
         }
         return dataset;
@@ -277,6 +292,7 @@ public class DebitCreditWekaClassifier {
     /**
      * Loads a dataset in ARFF format. If the file does not exist, or
      * it has a wrong format, the attribute trainData is null.
+     *
      * @param filename The name of the file that stores the dataset.
      */
     public Instances loadArff(String filename) {
@@ -296,7 +312,8 @@ public class DebitCreditWekaClassifier {
     /**
      * This method saves a dataset in ARFF format.
      * Attribute-Relation File Format (ARFF)
-     * @param dataset dataset in arff format
+     *
+     * @param dataset  dataset in arff format
      * @param filename The name of the file that stores the dataset.
      */
     public void saveArff(Instances dataset, String filename) {
@@ -312,3 +329,4 @@ public class DebitCreditWekaClassifier {
     }
 
 }
+
