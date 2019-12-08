@@ -1,4 +1,4 @@
-<b> Debit or credit classifier based on WEKA source code.</b>
+Debit or credit classifier based on WEKA source code
 The major target of project is demonstrate, how WEKA-tools can be applied for  solving different financial
 problem.
 Generates a classifier for debit-credit transactions. Classifier based on text information from transaction DB.
