@@ -15,7 +15,8 @@ debit   obtain a financial advantage or benefit, especially from an investment.
 credit  buy,contribution, fee, payment, deposit, ante, levy
 credit  got pay, payment, discharge
 credit  get, pay, fee, payment, toll
-credit  payment, expenditure
+credit  payment
+credit  expenditure
 credit  pay out (money) in buying or hiring goods or services.
 credit  the action of spending funds.
 credit  payment, spend
